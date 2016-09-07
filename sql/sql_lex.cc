@@ -5339,7 +5339,6 @@ bool LEX::sp_exit_block(THD *thd, sp_label *lab, Item *when)
   if (!when)
     return sp_exit_block(thd, lab);
 
-  sphead->reset_lex(thd); // This changes thd->lex
   DBUG_ASSERT(sphead == thd->lex->sphead);
   DBUG_ASSERT(spcont == thd->lex->spcont);
   sp_instr_jump_if_not *i= new (thd->mem_root)
@@ -5348,7 +5347,6 @@ bool LEX::sp_exit_block(THD *thd, sp_label *lab, Item *when)
                                                 when, thd->lex);
   if (i == NULL ||
       sphead->add_instr(i) ||
-      sphead->restore_lex(thd) ||
       sp_exit_block(thd, lab))
     return true;
   i->backpatch(sphead->instructions(), spcont);
@@ -5414,7 +5412,6 @@ bool LEX::sp_continue_loop(THD *thd, sp_label *lab, Item *when)
   if (!when)
     return sp_continue_loop(thd, lab);
 
-  sphead->reset_lex(thd); // This changes thd->lex
   DBUG_ASSERT(sphead == thd->lex->sphead);
   DBUG_ASSERT(spcont == thd->lex->spcont);
   sp_instr_jump_if_not *i= new (thd->mem_root)
@@ -5423,7 +5420,6 @@ bool LEX::sp_continue_loop(THD *thd, sp_label *lab, Item *when)
                                                 when, thd->lex);
   if (i == NULL ||
       sphead->add_instr(i) ||
-      sphead->restore_lex(thd) ||
       sp_continue_loop(thd, lab))
     return true;
   i->backpatch(sphead->instructions(), spcont);
