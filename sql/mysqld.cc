@@ -5302,6 +5302,9 @@ static int init_server_components()
 #endif
 
 #ifdef WITH_WSREP
+  /* Post-initialize members of wsrep startup threads. */
+  wsrep_thd_post_init();
+
   if (WSREP_ON && !opt_bin_log)
   {
     wsrep_emulate_bin_log= 1;

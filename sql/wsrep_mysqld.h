@@ -315,6 +315,7 @@ bool wsrep_create_like_table(THD* thd, TABLE_LIST* table,
 	                     HA_CREATE_INFO *create_info);
 bool wsrep_node_is_donor();
 bool wsrep_node_is_synced();
+void wsrep_thd_post_init();
 
 #else /* WITH_WSREP */
 
@@ -345,6 +346,7 @@ bool wsrep_node_is_synced();
 #define wsrep_thr_init() do {} while(0)
 #define wsrep_thr_deinit() do {} while(0)
 #define wsrep_running_threads (0)
+#define wsrep_thd_post_init (0)
 
 #endif /* WITH_WSREP */
 #endif /* WSREP_MYSQLD_H */

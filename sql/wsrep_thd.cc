@@ -644,3 +644,22 @@ bool wsrep_thd_has_explicit_locks(THD *thd)
   assert(thd);
   return thd->mdl_context.has_explicit_locks();
 }
+
+/*
+  Initialize some of the members of wsrep threads after
+  certain components of the server are initialized.
+*/
+void wsrep_thd_post_init()
+{
+  THD *thd;
+  I_List_iterator<THD> it(threads);
+
+  while ((thd= it++))
+  {
+    if (thd->wsrep_applier)
+    {
+      plugin_thdvar_init(thd);
+    }
+  }
+  return;
+}

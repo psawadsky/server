@@ -3096,6 +3096,8 @@ static double *mysql_sys_var_double(THD* thd, int offset)
   return (double *) intern_sys_var_ptr(thd, offset, true);
 }
 
+extern my_bool plugins_are_initialized;
+
 void plugin_thdvar_init(THD *thd)
 {
   plugin_ref old_table_plugin= thd->variables.table_plugin;
@@ -3116,7 +3118,12 @@ void plugin_thdvar_init(THD *thd)
   thd->variables.dynamic_variables_size= 0;
   thd->variables.dynamic_variables_ptr= 0;
 
-  if (IF_WSREP((!WSREP(thd) || !thd->wsrep_applier),1))
+  /*
+    The following initializations are deferred for some wsrep system threads
+    created during startup as they could be created even before LOCK_plugin
+    and plugins are initialized.
+  */
+  if (IF_WSREP((plugins_are_initialized),1))
   {
     mysql_mutex_lock(&LOCK_plugin);
     thd->variables.table_plugin=
