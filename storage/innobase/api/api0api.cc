@@ -3425,9 +3425,9 @@ ib_cursor_set_memcached_sync(
                 }
 
 		if (flag) {
-			my_atomic_addlong(&table->memcached_sync_count, 1);
+			my_atomic_addlint(&table->memcached_sync_count, 1);
 		} else {
-			my_atomic_addlong(&table->memcached_sync_count, -1);
+			my_atomic_addlint(&table->memcached_sync_count, -1);
 		        ut_a(table->memcached_sync_count >= 0);
 		}
 	} else {

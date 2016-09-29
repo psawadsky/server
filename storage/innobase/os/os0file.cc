@@ -5710,12 +5710,12 @@ os_file_pwrite(
 
 	++os_n_file_writes;
 
-	(void) my_atomic_addlong(&os_n_pending_writes, 1);
+	(void) my_atomic_addlint(&os_n_pending_writes, 1);
 	MONITOR_ATOMIC_INC(MONITOR_OS_PENDING_WRITES);
 
 	ssize_t	n_bytes = os_file_io(type, file, (void*) buf, n, offset, err);
 
-	(void) my_atomic_addlong(&os_n_pending_writes, -1);
+	(void) my_atomic_addlint(&os_n_pending_writes, -1);
 	MONITOR_ATOMIC_DEC(MONITOR_OS_PENDING_WRITES);
 
 	return(n_bytes);
@@ -5793,12 +5793,12 @@ os_file_pread(
 {
 	++os_n_file_reads;
 
-	(void) my_atomic_addlong(&os_n_pending_reads, 1);
+	(void) my_atomic_addlint(&os_n_pending_reads, 1);
 	MONITOR_ATOMIC_INC(MONITOR_OS_PENDING_READS);
 
 	ssize_t	n_bytes = os_file_io(type, file, buf, n, offset, err);
 
-	(void) my_atomic_addlong(&os_n_pending_reads, -1);
+	(void) my_atomic_addlint(&os_n_pending_reads, -1);
 	MONITOR_ATOMIC_DEC(MONITOR_OS_PENDING_READS);
 
 	return(n_bytes);

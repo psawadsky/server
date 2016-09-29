@@ -372,7 +372,7 @@ trx_purge_add_update_undo_to_history(
 		       undo_header + TRX_UNDO_HISTORY_NODE, mtr);
 
 	if (update_rseg_history_len) {
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&trx_sys->rseg_history_len, n_added_logs);
 		srv_wake_purge_thread_if_not_active();
 	}
@@ -476,7 +476,7 @@ trx_purge_free_segment(
 	flst_cut_end(rseg_hdr + TRX_RSEG_HISTORY,
 		     log_hdr + TRX_UNDO_HISTORY_NODE, n_removed_logs, &mtr);
 
-	my_atomic_addlong(&trx_sys->rseg_history_len, -n_removed_logs);
+	my_atomic_addlint(&trx_sys->rseg_history_len, -n_removed_logs);
 
 	do {
 
@@ -565,7 +565,7 @@ loop:
 				hdr_addr.boffset, limit->undo_no);
 		}
 
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&trx_sys->rseg_history_len, -n_removed_logs);
 
 		flst_truncate_end(rseg_hdr + TRX_RSEG_HISTORY,
@@ -1752,7 +1752,7 @@ trx_purge_wait_for_workers_to_complete(
 	ulint		n_submitted = purge_sys->n_submitted;
 
 	/* Ensure that the work queue empties out. */
-	while ((ulint) my_atomic_loadlong(&purge_sys->n_completed) != n_submitted) {
+	while ((ulint) my_atomic_loadlint(&purge_sys->n_completed) != n_submitted) {
 
 		if (srv_get_task_queue_length() > 0) {
 			srv_release_threads(SRV_WORKER, 1);
@@ -1858,7 +1858,7 @@ run_synchronously:
 
 		que_run_threads(thr);
 
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&purge_sys->n_completed, 1);
 
 		if (n_purge_threads > 1) {

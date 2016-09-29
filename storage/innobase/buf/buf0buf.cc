@@ -4291,7 +4291,7 @@ loop:
 				mutex_enter(pmutex);
 
 				ut_ad(buf_pool->n_pend_reads > 0);
-				my_atomic_addlong(&buf_pool->n_pend_reads, -1);
+				my_atomic_addlint(&buf_pool->n_pend_reads, -1);
 				buf_page_set_io_fix(bpage, BUF_IO_NONE);
 				mutex_exit(pmutex);
 				buf_LRU_free_page(bpage, true);
@@ -4338,7 +4338,7 @@ loop:
 				mutex_enter(pmutex);
 
 				ut_ad(buf_pool->n_pend_reads > 0);
-				my_atomic_addlong(&buf_pool->n_pend_reads, -1);
+				my_atomic_addlint(&buf_pool->n_pend_reads, -1);
  				buf_page_set_io_fix(bpage, BUF_IO_NONE);
 				mutex_exit(pmutex);
 				buf_LRU_free_page(bpage, true);

@@ -1256,4 +1256,16 @@ enum rw_lock_flag_t {
 
 #endif /* UNIV_INNOCHECKSUM */
 
+#ifdef _WIN64
+#define my_atomic_addlint my_atomic_add64
+#define my_atomic_storelint my_atomic_store64
+#define my_atomic_loadlint my_atomic_load64
+#define my_atomic_caslint my_atomic_cas64
+#else
+#define my_atomic_addlint my_atomic_addlong
+#define my_atomic_storelint my_atomic_storelong
+#define my_atomic_loadlint my_atomic_loadlong
+#define my_atomic_caslint my_atomic_caslong
+#endif
+
 #endif /* sync0types_h */

@@ -2724,7 +2724,7 @@ srv_task_execute(void)
 
 		que_run_threads(thr);
 
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&purge_sys->n_completed, 1);
 	}
 

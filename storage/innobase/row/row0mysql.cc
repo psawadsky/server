@@ -2123,7 +2123,7 @@ public:
 
 	void operator() (upd_node_t* node) {
 		ut_ad(node->table->n_foreign_key_checks_running > 0);
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&node->table->n_foreign_key_checks_running, -1);
 	}
 };
@@ -2660,7 +2660,7 @@ run_again:
 	if (thr->fk_cascade_depth > 0) {
 		/* Processing cascade operation */
 		ut_ad(node->table->n_foreign_key_checks_running > 0);
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&node->table->n_foreign_key_checks_running, -1);
 		node->processed_cascades->push_back(node);
 	}
@@ -2756,7 +2756,7 @@ error:
 
 	if (thr->fk_cascade_depth > 0) {
 		ut_ad(node->table->n_foreign_key_checks_running > 0);
-		my_atomic_addlong(
+		my_atomic_addlint(
 			&node->table->n_foreign_key_checks_running, -1);
 		thr->fk_cascade_depth = 0;
 	}

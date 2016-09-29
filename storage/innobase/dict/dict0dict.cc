@@ -7334,7 +7334,7 @@ dict_index_zip_pad_update(
 			/* Use atomics even though we have the mutex.
 			This is to ensure that we are able to read
 			info->pad atomically. */
-			my_atomic_addlong(&info->pad, ZIP_PAD_INCR);
+			my_atomic_addlint(&info->pad, ZIP_PAD_INCR);
 
 			MONITOR_INC(MONITOR_PAD_INCREMENTS);
 		}
@@ -7356,7 +7356,7 @@ dict_index_zip_pad_update(
 			/* Use atomics even though we have the mutex.
 			This is to ensure that we are able to read
 			info->pad atomically. */
-			my_atomic_addlong(&info->pad, -ZIP_PAD_INCR);
+			my_atomic_addlint(&info->pad, -ZIP_PAD_INCR);
 
 			info->n_rounds = 0;
 
@@ -7430,7 +7430,7 @@ dict_index_zip_pad_optimal_page_size(
 		return(UNIV_PAGE_SIZE);
 	}
 
-	pad = my_atomic_loadlong(&index->zip_pad.pad);
+	pad = my_atomic_loadlint(&index->zip_pad.pad);
 
 	ut_ad(pad < UNIV_PAGE_SIZE);
 	sz = UNIV_PAGE_SIZE - pad;

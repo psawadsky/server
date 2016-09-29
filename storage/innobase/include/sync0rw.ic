@@ -89,7 +89,7 @@ rw_lock_set_waiter_flag(
 	rw_lock_t*	lock)	/*!< in/out: rw-lock */
 {
 #ifdef INNODB_RW_LOCKS_USE_ATOMICS
-	my_atomic_storelong(&lock->waiters, 1);
+	my_atomic_storelint(&lock->waiters, 1);
 #else /* INNODB_RW_LOCKS_USE_ATOMICS */
 	lock->waiters = 1;
 #endif /* INNODB_RW_LOCKS_USE_ATOMICS */
@@ -106,7 +106,7 @@ rw_lock_reset_waiter_flag(
 	rw_lock_t*	lock)	/*!< in/out: rw-lock */
 {
 #ifdef INNODB_RW_LOCKS_USE_ATOMICS
-	my_atomic_storelong(&lock->waiters, 0);
+	my_atomic_storelint(&lock->waiters, 0);
 #else /* INNODB_RW_LOCKS_USE_ATOMICS */
 	lock->waiters = 0;
 #endif /* INNODB_RW_LOCKS_USE_ATOMICS */
@@ -272,7 +272,7 @@ rw_lock_lock_word_decr(
 
 	local_lock_word = lock->lock_word;
 	while (local_lock_word > threshold) {
-		if (my_atomic_caslong(&lock->lock_word,
+		if (my_atomic_caslint(&lock->lock_word,
 				      &local_lock_word,
 				      local_lock_word - amount)) {
 			return(true);
@@ -302,7 +302,7 @@ rw_lock_lock_word_incr(
 	ulint		amount)		/*!< in: amount of increment */
 {
 #ifdef INNODB_RW_LOCKS_USE_ATOMICS
-	return(my_atomic_addlong(&lock->lock_word, amount) + amount);
+	return(my_atomic_addlint(&lock->lock_word, amount) + amount);
 #else /* INNODB_RW_LOCKS_USE_ATOMICS */
 	lint local_lock_word;
 
@@ -445,7 +445,7 @@ rw_lock_x_lock_func_nowait(
 
 #ifdef INNODB_RW_LOCKS_USE_ATOMICS
 	lint oldval = X_LOCK_DECR;
-	success = my_atomic_caslong(&lock->lock_word, &oldval, 0);
+	success = my_atomic_caslint(&lock->lock_word, &oldval, 0);
 #else
 
 	success = FALSE;
@@ -459,7 +459,7 @@ rw_lock_x_lock_func_nowait(
 #endif
 	/* Note: recursive must be loaded before writer_thread see
 	comment for rw_lock_set_writer_id_and_recursion_flag().
-	To achieve this we load it before my_atomic_caslong(),
+	To achieve this we load it before my_atomic_caslint(),
 	which implies full memory barrier in current implementation. */
 	if (success) {
 		rw_lock_set_writer_id_and_recursion_flag(lock, true);

@@ -77,9 +77,9 @@ typedef time_t	ib_time_t;
    } while (0)
 # else
 #  define UT_RELAX_CPU() do { \
-     volatile lint	volatile_var; \
-     lint oldval= 0;
-     my_atomic_caslong(&volatile_var, &oldval, 1); \
+     volatile int32	volatile_var; \
+     int32 oldval= 0;
+     my_atomic_cas32(&volatile_var, &oldval, 1); \
    } while (0)
 # endif
 
